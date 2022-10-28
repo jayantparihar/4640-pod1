@@ -1,0 +1,31 @@
+---
+  - name: Install and Setup Podman Playbook
+    hosts: aws_ec2
+    become: true
+
+    tasks: 
+      - name: Sudo apt update
+        ansible.builtin.apt:
+                update_cache: yes
+        when: ansible_distribution in ["Ubuntu", "Debian"]
+
+      - name: upgrade all dnf
+          ansible.builtin.dnf:
+                name: "*"
+                state: latest
+        when: ansible_distribution in ["Rocky", "Rocky Enterprise Software Foundation"]
+      
+      - name: Install Podman
+        ansible.builtin.package:
+              name: podman
+              state: latest
+      - name: Pull httpd:2-alpine image from dockerhub.
+        podman_image:
+           name: docker.io/httpd
+           tag: 2-alpine
+      - name: Running httpd image.
+         containers.podman.podman_container:
+               name: my-first-container
+               image:  docker.io/httpd:2-alpine
+               state: started
+
