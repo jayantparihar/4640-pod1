@@ -12,7 +12,7 @@
          - sudo
         state: present
         system: no
-        home: /home/regular
+        home: /home
       when: ansible_distribution in ["Ubuntu"]
 
     - name: Create new user for Rocky
@@ -25,13 +25,13 @@
           - sudo
         system: no
         state: present
-        home: /home/regular
+        home: /home
       when: ansible_distribution in ["Rocky", "Rocky Enterprise Software Foundation"]
 
     - name: Copy the .ssh folder
       ansible.builtin.copy:
         src: ~/.ssh
-        dest: /home/regular/
+        dest: /home
         owner: regular
         group: regular
         mode: '0600'
