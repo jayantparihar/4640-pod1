@@ -13,8 +13,7 @@ enabled_plugins = ini
 # 4. After that create 2 VM's on AWS ec2. First one will be Ubuntu 22.04 and second one will be Rocky 8.
 # 5. Create a access key for both the VM using AWS web console go to the IAM(Identity access management) dashboard. Create a new group naming BCIT_4640 Give the new group AdministratorAccess under Attach permissions policies - Optional. 
 # 6. Create a new User on AWS. In the Users tab .Give your user programmatic access and provide user with permission from group BCIT_4640. This will generate a access key and access secret. Download the csv. 
-# 7. copy and paste the access key and access secret in .profile (located in home directory) by using ```
-vim .profile ``` 
+# 7. copy and paste the access key and access secret in .profile (located in home directory) by using ```vim .profile ``` 
 # and paste the acccess key and id on the bottom like and then save it.  
 ```
 export AWS_ACCESS_KEY_ID = 
