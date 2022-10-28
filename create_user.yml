@@ -1,0 +1,58 @@
+---
+  - hosts: all
+    tasks:
+    - name: Create new user for Ubuntu
+      become: yes
+      user: 
+        name: regular
+        password: "{{ 'password' | password_hash('sha512') }}" 
+        createhome: yes
+        shell: /bin/bash
+        groups: 
+         - sudo
+        state: present
+        system: no
+        home: /home/regular
+      when: ansible_distribution in ["Ubuntu"]
+
+    - name: Create new user for Rocky
+      user:
+        name: regular
+        password: "{{ 'password' | password_hash('sha512') }}"
+        createhome: yes
+        shell: /bin/bash
+        groups:
+          - sudo
+        system: no
+        state: present
+        home: /home/regular
+      when: ansible_distribution in ["Rocky", "Rocky Enterprise Software Foundation"]
+
+    - name: Copy the .ssh folder
+      ansible.builtin.copy:
+        src: ~/.ssh
+        dest: /home/regular/
+        owner: regular
+        group: regular
+        mode: '0600'
+        remote_src: yes
+      become: yes
+    
+    - name: Diable root login
+      ansible.builtin.lineinfile:
+         dest: /etc/ssh/sshd_config
+         regexp: '^PermitRoot Login'
+         line: 'PermitRoot Login no'
+         state: present
+         backup: yes
+      become: yes
+      notify:
+        - restart ssh
+
+      handlers:
+       - name: restart ssh
+         systemctl:
+           name: sshd
+           state: restarted
+
+
